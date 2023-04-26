@@ -1,7 +1,0 @@
-Variables de entrada.
-
-* Ingresos Mensuales.
-* Cantidad de Vehiculos.
-* Antiguedad de Vehiculos
-* Cantidad de Inmuebles
-* Posee Embarcacion o Aeronave de Lujo.
