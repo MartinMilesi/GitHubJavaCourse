@@ -163,13 +163,32 @@ public class LectorCsv {
 		   Pronostico partido13Marcos = pronosticos.get(54).crearPronostico(marcos, argentinaVsPolonia, argentina, pronosticos.get(54).getGana1(), pronosticos.get(54).getGana2(), pronosticos.get(54).getEmpata());
 		   Pronostico partido14Marcos = pronosticos.get(55).crearPronostico(marcos, poloniaVsArgentina, argentina, pronosticos.get(55).getGana1(), pronosticos.get(55).getGana2(), pronosticos.get(55).getEmpata());
 		   
+		   //Calculamos el ganador. Esto no deberia estar en el lector...
+		   Participante participantes[] = {mariana, pedro, juan, marcos};
+		   determinarGanador(participantes);
+		   
 		   System.out.println("Mariana tiene " +mariana.getPuntos()+ " puntos.");
 		   System.out.println("Pedro tiene " +pedro.getPuntos()+ " puntos.");
 		   System.out.println("Juan tiene " +juan.getPuntos()+ " puntos.");
 		   System.out.println("Marcos tiene " +marcos.getPuntos()+ " puntos.");
+		   System.out.println(" ");
+		   System.out.println("El ganador es "+determinarGanador(participantes).getNombre()+" con "+determinarGanador(participantes).getPuntos()+" puntos.");
+		   System.out.println(" ");
 		   
 		} catch (IllegalStateException | IOException | CsvValidationException e) {
 			e.printStackTrace();
 		}
 	 }
+	 
+	 public Participante determinarGanador (Participante[] participantes) { //Metodo para determinar el ganador. //Esto deberia estar en otra clase.
+		 Participante ganador = participantes[0];
+		 
+		 for (int i = 1; i<participantes.length; i++) {
+			 if (participantes[i].getPuntos() > ganador.getPuntos()) {
+				 ganador = participantes[i];
+			 }
+		 }
+		 return ganador;
+	 }
+	 
 }

@@ -16,7 +16,6 @@ public class Aplicacion {
 			//Lector CSV.
 			LectorCsv lectorCsv = new LectorCsv("src/main/resources/resultados.csv", "src/main/resources/pronosticos.csv");
 			lectorCsv.obtenerDatos();
-			System.out.println(" ");
 			System.out.println("Datos procesados, clases creadas, cerrando...");
 			System.exit(88);
 		}else {
@@ -26,7 +25,7 @@ public class Aplicacion {
 			System.exit(88);
 		}
 
-//Falta //Implementar calculos para decidir un ganador entre los cuatro participantes.
+//Echo  //*Implementar calculos para decidir un ganador entre los cuatro participantes.
 //Echo	//*Recibir como argumento un archivo con los resultados. (En Caso de que la Base de Datos falle se utiliza el archivo).
 //Echo	//*Recibir como argumento un archivo con los pronosticos. (En Caso de que la Base de Datos falle se utiliza el archivo).
 //Falta	//Recibir como argumento un archivo con la configuracion. (Conexion a Base de Datos, Puntaje por partido, Puntos Extras, etc).
