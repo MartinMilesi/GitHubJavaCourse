@@ -1,8 +1,11 @@
 package futbol;
 
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Properties;
 import com.opencsv.exceptions.CsvValidationException;
 import com.opencsv.*;
 
@@ -10,15 +13,24 @@ public class LectorCsv {
 	
 	 String rutaArchivoPronosticos;
 	 String rutaArchivoResultados;
-	 
-	 public LectorCsv(String rutaArchivoResultados, String rutaArchivoPronosticos) {
-		 
-		 this.rutaArchivoResultados = rutaArchivoResultados;
-		 this.rutaArchivoPronosticos = rutaArchivoPronosticos;
-	 }
+	 String rutaArchivoConfiguracion;
 	 
 	 @SuppressWarnings("unused")
-	public void obtenerDatos(){
+	public void obtenerDatos(String rutaArchivoConfiguracion){
+		 
+		 this.rutaArchivoConfiguracion = rutaArchivoConfiguracion;
+		 
+		 Properties config = new Properties();
+		 InputStream configurarInput = null;
+		 try {
+			 configurarInput = new FileInputStream(rutaArchivoConfiguracion);
+			 config.load(configurarInput);
+		 }catch(Exception e) {
+			 e.printStackTrace();
+		 }
+		 
+		 this.rutaArchivoResultados = config.getProperty("rutaCsvResultados");
+		 this.rutaArchivoPronosticos = config.getProperty("rutaCsvPronosticos");
 		 
 		 ArrayList<ArchivoResultados> resultados =  new ArrayList<ArchivoResultados>();
 		 ArrayList<ArchivoPronosticos> pronosticos =  new ArrayList<ArchivoPronosticos>();
@@ -93,75 +105,75 @@ public class LectorCsv {
 		   Partido poloniaVsArgentina = resultados.get(13).crearPartido(polonia, argentina, resultados.get(13).getCantGoles1(), resultados.get(13).getCantGoles2());
 		     
 		   //Rondas.
-		   Ronda ronda1Fase1 = resultados.get(0).crearRonda(resultados.get(0).getRonda(), argentinaVsFrancia, arabiaSauditaVsChile, poloniaVsBrazil, mexicoVsInglaterra);
-		   Ronda ronda2Fase1 = resultados.get(4).crearRonda(resultados.get(4).getRonda(), argentinaVsChile, franciaVsArabiaSaudita, poloniaVsInglaterra, brazilVsMexico);
-		   Ronda ronda1Fase2 = resultados.get(8).crearRonda(resultados.get(8).getRonda(), argentinaVsArabiaSaudita, poloniaVsMexico);
-		   Ronda ronda2Fase2 = resultados.get(10).crearRonda(resultados.get(10).getRonda(), argentinaVsMexico, arabiaSauditaVsPolonia);
-		   Ronda ronda1Fase3 = resultados.get(12).crearRonda(resultados.get(12).getRonda(), argentinaVsPolonia);
-		   Ronda ronda2Fase3 = resultados.get(13).crearRonda(resultados.get(13).getRonda(), poloniaVsArgentina);
+		   Ronda ronda1Fase1 = resultados.get(0).crearRonda(resultados.get(0).getRonda(), argentinaVsFrancia, arabiaSauditaVsChile, poloniaVsBrazil, mexicoVsInglaterra, Integer.parseInt(config.getProperty("puntosRonda")));
+		   Ronda ronda2Fase1 = resultados.get(4).crearRonda(resultados.get(4).getRonda(), argentinaVsChile, franciaVsArabiaSaudita, poloniaVsInglaterra, brazilVsMexico, Integer.parseInt(config.getProperty("puntosRonda")));
+		   Ronda ronda1Fase2 = resultados.get(8).crearRonda(resultados.get(8).getRonda(), argentinaVsArabiaSaudita, poloniaVsMexico, Integer.parseInt(config.getProperty("puntosRonda")));
+		   Ronda ronda2Fase2 = resultados.get(10).crearRonda(resultados.get(10).getRonda(), argentinaVsMexico, arabiaSauditaVsPolonia, Integer.parseInt(config.getProperty("puntosRonda")));
+		   Ronda ronda1Fase3 = resultados.get(12).crearRonda(resultados.get(12).getRonda(), argentinaVsPolonia, Integer.parseInt(config.getProperty("puntosRonda")));
+		   Ronda ronda2Fase3 = resultados.get(13).crearRonda(resultados.get(13).getRonda(), poloniaVsArgentina, Integer.parseInt(config.getProperty("puntosRonda")));
 		     
 		   //Fases.
-		   Fase fase1 = resultados.get(0).crearFase(resultados.get(0).getFase(), ronda1Fase1, ronda2Fase1);
-		   Fase fase2 = resultados.get(8).crearFase(resultados.get(8).getFase(), ronda1Fase2, ronda2Fase2);
-		   Fase fase3 = resultados.get(12).crearFase(resultados.get(12).getFase(), ronda1Fase3, ronda2Fase3);
+		   Fase fase1 = resultados.get(0).crearFase(resultados.get(0).getFase(), ronda1Fase1, ronda2Fase1, Integer.parseInt(config.getProperty("puntosFase")));
+		   Fase fase2 = resultados.get(8).crearFase(resultados.get(8).getFase(), ronda1Fase2, ronda2Fase2, Integer.parseInt(config.getProperty("puntosFase")));
+		   Fase fase3 = resultados.get(12).crearFase(resultados.get(12).getFase(), ronda1Fase3, ronda2Fase3, Integer.parseInt(config.getProperty("puntosFase")));
 		   
 		   //Pronosticos.
-		   Pronostico partido1Mariana = pronosticos.get(0).crearPronostico(mariana, argentinaVsFrancia, argentina, pronosticos.get(0).getGana1(), pronosticos.get(0).getGana2(), pronosticos.get(0).getEmpata());
-		   Pronostico partido2Mariana = pronosticos.get(1).crearPronostico(mariana, arabiaSauditaVsChile, arabiaSaudita, pronosticos.get(1).getGana1(), pronosticos.get(1).getGana2(), pronosticos.get(1).getEmpata());
-		   Pronostico partido3Mariana = pronosticos.get(2).crearPronostico(mariana, poloniaVsBrazil, polonia, pronosticos.get(2).getGana1(), pronosticos.get(2).getGana2(), pronosticos.get(2).getEmpata());
-		   Pronostico partido4Mariana = pronosticos.get(3).crearPronostico(mariana, mexicoVsInglaterra, mexico, pronosticos.get(3).getGana1(), pronosticos.get(3).getGana2(), pronosticos.get(3).getEmpata());
-		   Pronostico partido5Mariana = pronosticos.get(4).crearPronostico(mariana, argentinaVsChile, argentina, pronosticos.get(4).getGana1(), pronosticos.get(4).getGana2(), pronosticos.get(4).getEmpata());
-		   Pronostico partido6Mariana = pronosticos.get(5).crearPronostico(mariana, franciaVsArabiaSaudita, arabiaSaudita, pronosticos.get(5).getGana1(), pronosticos.get(5).getGana2(), pronosticos.get(5).getEmpata());
-		   Pronostico partido7Mariana = pronosticos.get(6).crearPronostico(mariana, poloniaVsInglaterra, polonia, pronosticos.get(6).getGana1(), pronosticos.get(6).getGana2(), pronosticos.get(6).getEmpata());
-		   Pronostico partido8Mariana = pronosticos.get(7).crearPronostico(mariana, brazilVsMexico, brazil, pronosticos.get(7).getGana1(), pronosticos.get(7).getGana2(), pronosticos.get(7).getEmpata());
-		   Pronostico partido9Mariana = pronosticos.get(8).crearPronostico(mariana, argentinaVsArabiaSaudita, argentina, pronosticos.get(8).getGana1(), pronosticos.get(8).getGana2(), pronosticos.get(8).getEmpata());
-		   Pronostico partido10Mariana = pronosticos.get(9).crearPronostico(mariana, poloniaVsMexico, polonia, pronosticos.get(9).getGana1(), pronosticos.get(9).getGana2(), pronosticos.get(9).getEmpata());
-		   Pronostico partido11Mariana = pronosticos.get(10).crearPronostico(mariana, argentinaVsMexico, argentina, pronosticos.get(10).getGana1(), pronosticos.get(10).getGana2(), pronosticos.get(10).getEmpata());
-		   Pronostico partido12Mariana = pronosticos.get(11).crearPronostico(mariana, arabiaSauditaVsPolonia, arabiaSaudita, pronosticos.get(11).getGana1(), pronosticos.get(11).getGana2(), pronosticos.get(11).getEmpata());
-		   Pronostico partido13Mariana = pronosticos.get(12).crearPronostico(mariana, argentinaVsPolonia, argentina, pronosticos.get(12).getGana1(), pronosticos.get(12).getGana2(), pronosticos.get(12).getEmpata());
-		   Pronostico partido14Mariana = pronosticos.get(13).crearPronostico(mariana, poloniaVsArgentina, argentina, pronosticos.get(13).getGana1(), pronosticos.get(13).getGana2(), pronosticos.get(13).getEmpata());
-		   Pronostico partido1Pedro = pronosticos.get(14).crearPronostico(pedro, argentinaVsFrancia, argentina, pronosticos.get(14).getGana1(), pronosticos.get(14).getGana2(), pronosticos.get(14).getEmpata());
-		   Pronostico partido2Pedro = pronosticos.get(15).crearPronostico(pedro, arabiaSauditaVsChile, arabiaSaudita, pronosticos.get(15).getGana1(), pronosticos.get(15).getGana2(), pronosticos.get(15).getEmpata());
-		   Pronostico partido3Pedro = pronosticos.get(16).crearPronostico(pedro, poloniaVsBrazil, polonia, pronosticos.get(16).getGana1(), pronosticos.get(16).getGana2(), pronosticos.get(16).getEmpata());
-		   Pronostico partido4Pedro = pronosticos.get(17).crearPronostico(pedro, mexicoVsInglaterra, mexico, pronosticos.get(17).getGana1(), pronosticos.get(17).getGana2(), pronosticos.get(17).getEmpata());
-		   Pronostico partido5Pedro = pronosticos.get(18).crearPronostico(pedro, argentinaVsChile, chile, pronosticos.get(18).getGana1(), pronosticos.get(18).getGana2(), pronosticos.get(18).getEmpata());
-		   Pronostico partido6Pedro = pronosticos.get(19).crearPronostico(pedro, franciaVsArabiaSaudita, francia, pronosticos.get(19).getGana1(), pronosticos.get(19).getGana2(), pronosticos.get(19).getEmpata());
-		   Pronostico partido7Pedro = pronosticos.get(20).crearPronostico(pedro, poloniaVsInglaterra, inglaterra, pronosticos.get(20).getGana1(), pronosticos.get(20).getGana2(), pronosticos.get(20).getEmpata());
-		   Pronostico partido8Pedro = pronosticos.get(21).crearPronostico(pedro, brazilVsMexico, mexico, pronosticos.get(21).getGana1(), pronosticos.get(21).getGana2(), pronosticos.get(21).getEmpata());
-		   Pronostico partido9Pedro = pronosticos.get(22).crearPronostico(pedro, argentinaVsArabiaSaudita, argentina, pronosticos.get(22).getGana1(), pronosticos.get(22).getGana2(), pronosticos.get(22).getEmpata());
-		   Pronostico partido10Pedro = pronosticos.get(23).crearPronostico(pedro, poloniaVsMexico, mexico, pronosticos.get(23).getGana1(), pronosticos.get(23).getGana2(), pronosticos.get(23).getEmpata());
-		   Pronostico partido11Pedro = pronosticos.get(24).crearPronostico(pedro, argentinaVsMexico, argentina, pronosticos.get(24).getGana1(), pronosticos.get(24).getGana2(), pronosticos.get(24).getEmpata());
-		   Pronostico partido12Pedro = pronosticos.get(25).crearPronostico(pedro, arabiaSauditaVsPolonia, arabiaSaudita, pronosticos.get(25).getGana1(), pronosticos.get(25).getGana2(), pronosticos.get(25).getEmpata());
-		   Pronostico partido13Pedro = pronosticos.get(26).crearPronostico(pedro, argentinaVsPolonia, polonia, pronosticos.get(26).getGana1(), pronosticos.get(26).getGana2(), pronosticos.get(26).getEmpata());
-		   Pronostico partido14Pedro = pronosticos.get(27).crearPronostico(pedro, poloniaVsArgentina, argentina, pronosticos.get(27).getGana1(), pronosticos.get(27).getGana2(), pronosticos.get(27).getEmpata());
-		   Pronostico partido1Juan = pronosticos.get(28).crearPronostico(juan, argentinaVsFrancia, argentina, pronosticos.get(28).getGana1(), pronosticos.get(28).getGana2(), pronosticos.get(28).getEmpata());
-		   Pronostico partido2Juan = pronosticos.get(29).crearPronostico(juan, arabiaSauditaVsChile, arabiaSaudita, pronosticos.get(29).getGana1(), pronosticos.get(29).getGana2(), pronosticos.get(29).getEmpata());
-		   Pronostico partido3Juan = pronosticos.get(30).crearPronostico(juan, poloniaVsBrazil, brazil, pronosticos.get(30).getGana1(), pronosticos.get(30).getGana2(), pronosticos.get(30).getEmpata());
-		   Pronostico partido4Juan = pronosticos.get(31).crearPronostico(juan, mexicoVsInglaterra, mexico, pronosticos.get(31).getGana1(), pronosticos.get(31).getGana2(), pronosticos.get(31).getEmpata());
-		   Pronostico partido5Juan = pronosticos.get(32).crearPronostico(juan, argentinaVsChile, argentina, pronosticos.get(32).getGana1(), pronosticos.get(32).getGana2(), pronosticos.get(32).getEmpata());
-		   Pronostico partido6Juan = pronosticos.get(33).crearPronostico(juan, franciaVsArabiaSaudita, arabiaSaudita, pronosticos.get(33).getGana1(), pronosticos.get(33).getGana2(), pronosticos.get(33).getEmpata());
-		   Pronostico partido7Juan = pronosticos.get(34).crearPronostico(juan, poloniaVsInglaterra, inglaterra, pronosticos.get(34).getGana1(), pronosticos.get(34).getGana2(), pronosticos.get(34).getEmpata());
-		   Pronostico partido8Juan = pronosticos.get(35).crearPronostico(juan, brazilVsMexico, mexico, pronosticos.get(35).getGana1(), pronosticos.get(35).getGana2(), pronosticos.get(35).getEmpata());
-		   Pronostico partido9Juan = pronosticos.get(36).crearPronostico(juan, argentinaVsArabiaSaudita, argentina, pronosticos.get(36).getGana1(), pronosticos.get(36).getGana2(), pronosticos.get(36).getEmpata());
-		   Pronostico partido10Juan = pronosticos.get(37).crearPronostico(juan, poloniaVsMexico, mexico, pronosticos.get(37).getGana1(), pronosticos.get(37).getGana2(), pronosticos.get(37).getEmpata());
-		   Pronostico partido11Juan = pronosticos.get(38).crearPronostico(juan, argentinaVsMexico, argentina, pronosticos.get(38).getGana1(), pronosticos.get(38).getGana2(), pronosticos.get(38).getEmpata());
-		   Pronostico partido12Juan = pronosticos.get(39).crearPronostico(juan, arabiaSauditaVsPolonia, polonia, pronosticos.get(39).getGana1(), pronosticos.get(39).getGana2(), pronosticos.get(39).getEmpata());
-		   Pronostico partido13Juan = pronosticos.get(40).crearPronostico(juan, argentinaVsPolonia, argentina, pronosticos.get(40).getGana1(), pronosticos.get(40).getGana2(), pronosticos.get(40).getEmpata());
-		   Pronostico partido14Juan = pronosticos.get(41).crearPronostico(juan, poloniaVsArgentina, argentina, pronosticos.get(41).getGana1(), pronosticos.get(41).getGana2(), pronosticos.get(41).getEmpata());
-		   Pronostico partido1Marcos = pronosticos.get(42).crearPronostico(marcos, argentinaVsFrancia, argentina, pronosticos.get(42).getGana1(), pronosticos.get(42).getGana2(), pronosticos.get(42).getEmpata());
-		   Pronostico partido2Marcos = pronosticos.get(43).crearPronostico(marcos, arabiaSauditaVsChile, chile, pronosticos.get(43).getGana1(), pronosticos.get(43).getGana2(), pronosticos.get(43).getEmpata());
-		   Pronostico partido3Marcos = pronosticos.get(44).crearPronostico(marcos, poloniaVsBrazil, brazil, pronosticos.get(44).getGana1(), pronosticos.get(44).getGana2(), pronosticos.get(44).getEmpata());
-		   Pronostico partido4Marcos = pronosticos.get(45).crearPronostico(marcos, mexicoVsInglaterra, mexico, pronosticos.get(45).getGana1(), pronosticos.get(45).getGana2(), pronosticos.get(45).getEmpata());
-		   Pronostico partido5Marcos = pronosticos.get(46).crearPronostico(marcos, argentinaVsChile, argentina, pronosticos.get(46).getGana1(), pronosticos.get(46).getGana2(), pronosticos.get(46).getEmpata());
-		   Pronostico partido6Marcos = pronosticos.get(47).crearPronostico(marcos, franciaVsArabiaSaudita, arabiaSaudita, pronosticos.get(47).getGana1(), pronosticos.get(47).getGana2(), pronosticos.get(47).getEmpata());
-		   Pronostico partido7Marcos = pronosticos.get(48).crearPronostico(marcos, poloniaVsInglaterra, polonia, pronosticos.get(48).getGana1(), pronosticos.get(48).getGana2(), pronosticos.get(48).getEmpata());
-		   Pronostico partido8Marcos = pronosticos.get(49).crearPronostico(marcos, brazilVsMexico, brazil, pronosticos.get(49).getGana1(), pronosticos.get(49).getGana2(), pronosticos.get(49).getEmpata());
-		   Pronostico partido9Marcos = pronosticos.get(50).crearPronostico(marcos, argentinaVsArabiaSaudita, argentina, pronosticos.get(50).getGana1(), pronosticos.get(50).getGana2(), pronosticos.get(50).getEmpata());
-		   Pronostico partido10Marcos = pronosticos.get(51).crearPronostico(marcos, poloniaVsMexico, polonia, pronosticos.get(51).getGana1(), pronosticos.get(51).getGana2(), pronosticos.get(51).getEmpata());
-		   Pronostico partido11Marcos = pronosticos.get(52).crearPronostico(marcos, argentinaVsMexico, argentina, pronosticos.get(52).getGana1(), pronosticos.get(52).getGana2(), pronosticos.get(52).getEmpata());
-		   Pronostico partido12Marcos = pronosticos.get(53).crearPronostico(marcos, arabiaSauditaVsPolonia, polonia, pronosticos.get(53).getGana1(), pronosticos.get(53).getGana2(), pronosticos.get(53).getEmpata());
-		   Pronostico partido13Marcos = pronosticos.get(54).crearPronostico(marcos, argentinaVsPolonia, argentina, pronosticos.get(54).getGana1(), pronosticos.get(54).getGana2(), pronosticos.get(54).getEmpata());
-		   Pronostico partido14Marcos = pronosticos.get(55).crearPronostico(marcos, poloniaVsArgentina, argentina, pronosticos.get(55).getGana1(), pronosticos.get(55).getGana2(), pronosticos.get(55).getEmpata());
+		   Pronostico partido1Mariana = pronosticos.get(0).crearPronostico(mariana, argentinaVsFrancia, argentina, pronosticos.get(0).getGana1(), pronosticos.get(0).getGana2(), pronosticos.get(0).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido2Mariana = pronosticos.get(1).crearPronostico(mariana, arabiaSauditaVsChile, arabiaSaudita, pronosticos.get(1).getGana1(), pronosticos.get(1).getGana2(), pronosticos.get(1).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido3Mariana = pronosticos.get(2).crearPronostico(mariana, poloniaVsBrazil, polonia, pronosticos.get(2).getGana1(), pronosticos.get(2).getGana2(), pronosticos.get(2).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido4Mariana = pronosticos.get(3).crearPronostico(mariana, mexicoVsInglaterra, mexico, pronosticos.get(3).getGana1(), pronosticos.get(3).getGana2(), pronosticos.get(3).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido5Mariana = pronosticos.get(4).crearPronostico(mariana, argentinaVsChile, argentina, pronosticos.get(4).getGana1(), pronosticos.get(4).getGana2(), pronosticos.get(4).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido6Mariana = pronosticos.get(5).crearPronostico(mariana, franciaVsArabiaSaudita, arabiaSaudita, pronosticos.get(5).getGana1(), pronosticos.get(5).getGana2(), pronosticos.get(5).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido7Mariana = pronosticos.get(6).crearPronostico(mariana, poloniaVsInglaterra, polonia, pronosticos.get(6).getGana1(), pronosticos.get(6).getGana2(), pronosticos.get(6).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido8Mariana = pronosticos.get(7).crearPronostico(mariana, brazilVsMexico, brazil, pronosticos.get(7).getGana1(), pronosticos.get(7).getGana2(), pronosticos.get(7).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido9Mariana = pronosticos.get(8).crearPronostico(mariana, argentinaVsArabiaSaudita, argentina, pronosticos.get(8).getGana1(), pronosticos.get(8).getGana2(), pronosticos.get(8).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido10Mariana = pronosticos.get(9).crearPronostico(mariana, poloniaVsMexico, polonia, pronosticos.get(9).getGana1(), pronosticos.get(9).getGana2(), pronosticos.get(9).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido11Mariana = pronosticos.get(10).crearPronostico(mariana, argentinaVsMexico, argentina, pronosticos.get(10).getGana1(), pronosticos.get(10).getGana2(), pronosticos.get(10).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido12Mariana = pronosticos.get(11).crearPronostico(mariana, arabiaSauditaVsPolonia, arabiaSaudita, pronosticos.get(11).getGana1(), pronosticos.get(11).getGana2(), pronosticos.get(11).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido13Mariana = pronosticos.get(12).crearPronostico(mariana, argentinaVsPolonia, argentina, pronosticos.get(12).getGana1(), pronosticos.get(12).getGana2(), pronosticos.get(12).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido14Mariana = pronosticos.get(13).crearPronostico(mariana, poloniaVsArgentina, argentina, pronosticos.get(13).getGana1(), pronosticos.get(13).getGana2(), pronosticos.get(13).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido1Pedro = pronosticos.get(14).crearPronostico(pedro, argentinaVsFrancia, argentina, pronosticos.get(14).getGana1(), pronosticos.get(14).getGana2(), pronosticos.get(14).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido2Pedro = pronosticos.get(15).crearPronostico(pedro, arabiaSauditaVsChile, arabiaSaudita, pronosticos.get(15).getGana1(), pronosticos.get(15).getGana2(), pronosticos.get(15).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido3Pedro = pronosticos.get(16).crearPronostico(pedro, poloniaVsBrazil, polonia, pronosticos.get(16).getGana1(), pronosticos.get(16).getGana2(), pronosticos.get(16).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido4Pedro = pronosticos.get(17).crearPronostico(pedro, mexicoVsInglaterra, mexico, pronosticos.get(17).getGana1(), pronosticos.get(17).getGana2(), pronosticos.get(17).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido5Pedro = pronosticos.get(18).crearPronostico(pedro, argentinaVsChile, chile, pronosticos.get(18).getGana1(), pronosticos.get(18).getGana2(), pronosticos.get(18).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido6Pedro = pronosticos.get(19).crearPronostico(pedro, franciaVsArabiaSaudita, francia, pronosticos.get(19).getGana1(), pronosticos.get(19).getGana2(), pronosticos.get(19).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido7Pedro = pronosticos.get(20).crearPronostico(pedro, poloniaVsInglaterra, inglaterra, pronosticos.get(20).getGana1(), pronosticos.get(20).getGana2(), pronosticos.get(20).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido8Pedro = pronosticos.get(21).crearPronostico(pedro, brazilVsMexico, mexico, pronosticos.get(21).getGana1(), pronosticos.get(21).getGana2(), pronosticos.get(21).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido9Pedro = pronosticos.get(22).crearPronostico(pedro, argentinaVsArabiaSaudita, argentina, pronosticos.get(22).getGana1(), pronosticos.get(22).getGana2(), pronosticos.get(22).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido10Pedro = pronosticos.get(23).crearPronostico(pedro, poloniaVsMexico, mexico, pronosticos.get(23).getGana1(), pronosticos.get(23).getGana2(), pronosticos.get(23).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido11Pedro = pronosticos.get(24).crearPronostico(pedro, argentinaVsMexico, argentina, pronosticos.get(24).getGana1(), pronosticos.get(24).getGana2(), pronosticos.get(24).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido12Pedro = pronosticos.get(25).crearPronostico(pedro, arabiaSauditaVsPolonia, arabiaSaudita, pronosticos.get(25).getGana1(), pronosticos.get(25).getGana2(), pronosticos.get(25).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido13Pedro = pronosticos.get(26).crearPronostico(pedro, argentinaVsPolonia, polonia, pronosticos.get(26).getGana1(), pronosticos.get(26).getGana2(), pronosticos.get(26).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido14Pedro = pronosticos.get(27).crearPronostico(pedro, poloniaVsArgentina, argentina, pronosticos.get(27).getGana1(), pronosticos.get(27).getGana2(), pronosticos.get(27).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido1Juan = pronosticos.get(28).crearPronostico(juan, argentinaVsFrancia, argentina, pronosticos.get(28).getGana1(), pronosticos.get(28).getGana2(), pronosticos.get(28).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido2Juan = pronosticos.get(29).crearPronostico(juan, arabiaSauditaVsChile, arabiaSaudita, pronosticos.get(29).getGana1(), pronosticos.get(29).getGana2(), pronosticos.get(29).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido3Juan = pronosticos.get(30).crearPronostico(juan, poloniaVsBrazil, brazil, pronosticos.get(30).getGana1(), pronosticos.get(30).getGana2(), pronosticos.get(30).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido4Juan = pronosticos.get(31).crearPronostico(juan, mexicoVsInglaterra, mexico, pronosticos.get(31).getGana1(), pronosticos.get(31).getGana2(), pronosticos.get(31).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido5Juan = pronosticos.get(32).crearPronostico(juan, argentinaVsChile, argentina, pronosticos.get(32).getGana1(), pronosticos.get(32).getGana2(), pronosticos.get(32).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido6Juan = pronosticos.get(33).crearPronostico(juan, franciaVsArabiaSaudita, arabiaSaudita, pronosticos.get(33).getGana1(), pronosticos.get(33).getGana2(), pronosticos.get(33).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido7Juan = pronosticos.get(34).crearPronostico(juan, poloniaVsInglaterra, inglaterra, pronosticos.get(34).getGana1(), pronosticos.get(34).getGana2(), pronosticos.get(34).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido8Juan = pronosticos.get(35).crearPronostico(juan, brazilVsMexico, mexico, pronosticos.get(35).getGana1(), pronosticos.get(35).getGana2(), pronosticos.get(35).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido9Juan = pronosticos.get(36).crearPronostico(juan, argentinaVsArabiaSaudita, argentina, pronosticos.get(36).getGana1(), pronosticos.get(36).getGana2(), pronosticos.get(36).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido10Juan = pronosticos.get(37).crearPronostico(juan, poloniaVsMexico, mexico, pronosticos.get(37).getGana1(), pronosticos.get(37).getGana2(), pronosticos.get(37).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido11Juan = pronosticos.get(38).crearPronostico(juan, argentinaVsMexico, argentina, pronosticos.get(38).getGana1(), pronosticos.get(38).getGana2(), pronosticos.get(38).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido12Juan = pronosticos.get(39).crearPronostico(juan, arabiaSauditaVsPolonia, polonia, pronosticos.get(39).getGana1(), pronosticos.get(39).getGana2(), pronosticos.get(39).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido13Juan = pronosticos.get(40).crearPronostico(juan, argentinaVsPolonia, argentina, pronosticos.get(40).getGana1(), pronosticos.get(40).getGana2(), pronosticos.get(40).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido14Juan = pronosticos.get(41).crearPronostico(juan, poloniaVsArgentina, argentina, pronosticos.get(41).getGana1(), pronosticos.get(41).getGana2(), pronosticos.get(41).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido1Marcos = pronosticos.get(42).crearPronostico(marcos, argentinaVsFrancia, argentina, pronosticos.get(42).getGana1(), pronosticos.get(42).getGana2(), pronosticos.get(42).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido2Marcos = pronosticos.get(43).crearPronostico(marcos, arabiaSauditaVsChile, chile, pronosticos.get(43).getGana1(), pronosticos.get(43).getGana2(), pronosticos.get(43).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido3Marcos = pronosticos.get(44).crearPronostico(marcos, poloniaVsBrazil, brazil, pronosticos.get(44).getGana1(), pronosticos.get(44).getGana2(), pronosticos.get(44).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido4Marcos = pronosticos.get(45).crearPronostico(marcos, mexicoVsInglaterra, mexico, pronosticos.get(45).getGana1(), pronosticos.get(45).getGana2(), pronosticos.get(45).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido5Marcos = pronosticos.get(46).crearPronostico(marcos, argentinaVsChile, argentina, pronosticos.get(46).getGana1(), pronosticos.get(46).getGana2(), pronosticos.get(46).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido6Marcos = pronosticos.get(47).crearPronostico(marcos, franciaVsArabiaSaudita, arabiaSaudita, pronosticos.get(47).getGana1(), pronosticos.get(47).getGana2(), pronosticos.get(47).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido7Marcos = pronosticos.get(48).crearPronostico(marcos, poloniaVsInglaterra, polonia, pronosticos.get(48).getGana1(), pronosticos.get(48).getGana2(), pronosticos.get(48).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido8Marcos = pronosticos.get(49).crearPronostico(marcos, brazilVsMexico, brazil, pronosticos.get(49).getGana1(), pronosticos.get(49).getGana2(), pronosticos.get(49).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido9Marcos = pronosticos.get(50).crearPronostico(marcos, argentinaVsArabiaSaudita, argentina, pronosticos.get(50).getGana1(), pronosticos.get(50).getGana2(), pronosticos.get(50).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido10Marcos = pronosticos.get(51).crearPronostico(marcos, poloniaVsMexico, polonia, pronosticos.get(51).getGana1(), pronosticos.get(51).getGana2(), pronosticos.get(51).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido11Marcos = pronosticos.get(52).crearPronostico(marcos, argentinaVsMexico, argentina, pronosticos.get(52).getGana1(), pronosticos.get(52).getGana2(), pronosticos.get(52).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido12Marcos = pronosticos.get(53).crearPronostico(marcos, arabiaSauditaVsPolonia, polonia, pronosticos.get(53).getGana1(), pronosticos.get(53).getGana2(), pronosticos.get(53).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido13Marcos = pronosticos.get(54).crearPronostico(marcos, argentinaVsPolonia, argentina, pronosticos.get(54).getGana1(), pronosticos.get(54).getGana2(), pronosticos.get(54).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
+		   Pronostico partido14Marcos = pronosticos.get(55).crearPronostico(marcos, poloniaVsArgentina, argentina, pronosticos.get(55).getGana1(), pronosticos.get(55).getGana2(), pronosticos.get(55).getEmpata(),Integer.parseInt(config.getProperty("puntosPartido")));
 		   
 		   //Calculamos el ganador. Esto no deberia estar en el lector...
 		   Participante participantes[] = {mariana, pedro, juan, marcos};

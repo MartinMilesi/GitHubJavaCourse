@@ -3,14 +3,16 @@ package futbol;
 public class Fase {
 	
 	private int nro;
+	private int puntosFase;
 	private Ronda ronda1;
 	private Ronda ronda2;
 	
-	public Fase(int nro, Ronda ronda1, Ronda ronda2) {
+	public Fase(int nro, Ronda ronda1, Ronda ronda2, int puntosFase) {
 		super();
 		this.nro = nro;
 		this.ronda1 = ronda1;
 		this.ronda2 = ronda2;
+		this.puntosFase = puntosFase;
 	}
 
 	public int getNro() {
@@ -40,5 +42,13 @@ public class Fase {
 
 	public void setRonda2(Ronda ronda2) {
 		this.ronda2 = ronda2;
+	}
+
+	public int getPuntosFase() {
+		return puntosFase;
+	}
+
+	public void setPuntosFase(int puntosFase) {
+		this.puntosFase = puntosFase;
 	}
 }

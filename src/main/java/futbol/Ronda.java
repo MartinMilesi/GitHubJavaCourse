@@ -3,39 +3,44 @@ package futbol;
 public class Ronda {
 	
 	private int nro;
+	private int puntosRonda;
 	private Partido partido1;
 	private Partido partido2;
 	private Partido partido3;
 	private Partido partido4;
 	
-	public Ronda(int nro, Partido partido1) {
+	public Ronda(int nro, Partido partido1, int puntosRonda) {
 		super();
 		this.nro = nro;
 		this.partido1 = partido1;
+		this.puntosRonda = puntosRonda;
 	}
 	
-	public Ronda(int nro, Partido partido1, Partido partido2) {
+	public Ronda(int nro, Partido partido1, Partido partido2, int puntosRonda) {
 		super();
 		this.nro = nro;
 		this.partido1 = partido1;
 		this.partido2 = partido2;
+		this.puntosRonda = puntosRonda;
 	}
 	
-	public Ronda(int nro, Partido partido1, Partido partido2, Partido partido3) {
+	public Ronda(int nro, Partido partido1, Partido partido2, Partido partido3, int puntosRonda) {
 		super();
 		this.nro = nro;
 		this.partido1 = partido1;
 		this.partido2 = partido2;
 		this.partido3 = partido3;
+		this.puntosRonda = puntosRonda;
 	}
 	
-	public Ronda(int nro, Partido partido1, Partido partido2, Partido partido3, Partido partido4) {
+	public Ronda(int nro, Partido partido1, Partido partido2, Partido partido3, Partido partido4, int puntosRonda) {
 		super();
 		this.nro = nro;
 		this.partido1 = partido1;
 		this.partido2 = partido2;
 		this.partido3 = partido3;
 		this.partido4 = partido4;
+		this.puntosRonda = puntosRonda;
 	}
 
 	public int getNro() {
@@ -81,5 +86,13 @@ public class Ronda {
 
 	public void setPartido4(Partido partido4) {
 		this.partido4 = partido4;
+	}
+
+	public int getPuntosRonda() {
+		return puntosRonda;
+	}
+
+	public void setPuntosRonda(int puntosRonda) {
+		this.puntosRonda = puntosRonda;
 	}
 }

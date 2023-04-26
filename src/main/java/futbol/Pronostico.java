@@ -9,8 +9,9 @@ public class Pronostico {
 	private String gana2;
 	private String empate;
 	private ResultadoEnum resultado;
+	private int puntosPartido;
 	
-	public Pronostico(Participante participante, Partido partido, Equipo equipo, String gana1, String gana2, String empate) {
+	public Pronostico(Participante participante, Partido partido, Equipo equipo, String gana1, String gana2, String empate, int puntosPartido) {
 		super();
 		this.participante = participante;
 		this.partido = partido;
@@ -18,6 +19,7 @@ public class Pronostico {
 		this.gana1 = gana1;
 		this.gana2 = gana2;
 		this.empate = empate;
+		this.puntosPartido = puntosPartido;
 //		this.resultado = resultado;
 	}
 
@@ -69,7 +71,7 @@ public class Pronostico {
 	public void puntos() { //Se suman puntos si el resultado del partido es igual al del pronostico.
 		ResultadoEnum resultadoReal = this.partido.resultado(this.equipo);
 		if (this.resultado.equals(resultadoReal)) {
-			this.participante.setPuntos(this.participante.getPuntos() + 1);
+			this.participante.setPuntos(this.participante.getPuntos() + puntosPartido);
 		}
 	}
 
@@ -95,5 +97,13 @@ public class Pronostico {
 
 	public void setEmpata(String empata) {
 		this.empate = empata;
+	}
+
+	public int getPuntosPartido() {
+		return puntosPartido;
+	}
+
+	public void setPuntosPartido(int puntosPartido) {
+		this.puntosPartido = puntosPartido;
 	}
 }

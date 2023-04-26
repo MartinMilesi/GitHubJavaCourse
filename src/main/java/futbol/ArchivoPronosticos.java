@@ -21,8 +21,8 @@ public class ArchivoPronosticos {
 		return participanteI;
 	}
 	
-	public Pronostico crearPronostico(Participante participante, Partido partido, Equipo equipo, String gana1, String gana2, String empate) {
-		Pronostico pronosticoI = new Pronostico(participante, partido, equipo, gana1, gana2, empate);
+	public Pronostico crearPronostico(Participante participante, Partido partido, Equipo equipo, String gana1, String gana2, String empate, int puntosPartido) {
+		Pronostico pronosticoI = new Pronostico(participante, partido, equipo, gana1, gana2, empate, puntosPartido);
 		pronosticoI.setResultado();
 		pronosticoI.puntos();
 		return pronosticoI;

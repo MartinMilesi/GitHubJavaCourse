@@ -31,23 +31,23 @@ public class ArchivoResultados {
 		return partidoI;
 	}
 	
-	public Ronda crearRonda(int ronda, Partido partido1) {
-		Ronda rondaI = new Ronda(ronda, partido1);
+	public Ronda crearRonda(int ronda, Partido partido1, int puntosRonda) {
+		Ronda rondaI = new Ronda(ronda, partido1, puntosRonda);
 		return rondaI;
 	}
 	
-	public Ronda crearRonda(int ronda, Partido partido1, Partido partido2) {
-		Ronda rondaI = new Ronda(ronda, partido1, partido2);
+	public Ronda crearRonda(int ronda, Partido partido1, Partido partido2, int puntosRonda) {
+		Ronda rondaI = new Ronda(ronda, partido1, partido2, puntosRonda);
 		return rondaI;
 	}
 	
-	public Ronda crearRonda(int ronda, Partido partido1, Partido partido2, Partido partido3, Partido partido4) {
-		Ronda rondaI = new Ronda(ronda, partido1, partido2, partido3, partido4);
+	public Ronda crearRonda(int ronda, Partido partido1, Partido partido2, Partido partido3, Partido partido4, int puntosRonda) {
+		Ronda rondaI = new Ronda(ronda, partido1, partido2, partido3, partido4, puntosRonda);
 		return rondaI;
 	}
 	
-	public Fase crearFase(int fase, Ronda ronda1, Ronda ronda2) {
-		Fase faseI = new Fase(fase, ronda1, ronda2);
+	public Fase crearFase(int fase, Ronda ronda1, Ronda ronda2, int puntosFase) {
+		Fase faseI = new Fase(fase, ronda1, ronda2, puntosFase);
 		return faseI;	
 	}
 	
